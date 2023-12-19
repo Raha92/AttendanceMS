@@ -49,7 +49,11 @@
                             <input type="hidden" name="emp_id" value="{{ $employee->id }}">
 
                             <tr>
-                                <td>{{ $employee->name }}</td>
+                                <td>
+                                    <a href="{{ route('individualAttendance', ['emp_id' => $employee->id]) }}">
+                                        {{ $employee->name }}
+                                    </a>
+                                </td>
                                 <td>{{ $employee->position }}</td>
                                 <!-- <td>{{ $employee->id }}</td> -->
 								<!-- Log on to codeastro.com for more projects! -->

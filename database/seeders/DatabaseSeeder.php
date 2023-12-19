@@ -6,8 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Role;
 use Hash;
-use Spatie\Permission\Traits\HasRoles;
-use DB;
+
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -17,15 +16,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $user= User::create([
+        // Seed roles
+        $adminRole = Role::create([
+            'slug' => 'admin',
+            'name' => 'Administrator',
+        ]);
+
+        // Seed a user with the admin role
+        $adminUser = User::create([
             'name' => 'Admin',
             'email' => 'admin@mail.com',
-            'password'=>bcrypt('123456'),
+            'password' => bcrypt('123456'),
         ]);
-        $role = Role::create([
-            'slug' => 'admin',
-            'name' => 'Adminstrator',
-        ]);
-        $user->roles()->sync($role->id);
+
+        // Assign the admin role to the user
+        $adminUser->roles()->sync($adminRole->id);
     }
 }

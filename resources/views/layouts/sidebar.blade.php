@@ -54,36 +54,32 @@
                             <!-- resources/views/layouts/app.blade.php -->
    
     
-                     <li>
+                     {{-- <li>
                         <a href="{{ route('showattendance', ['emp_id' => $employee->id ?? 111]) }}"><i class="ti-calendar"></i> <span>Individual Attendance </span></a>
                     </li>
-    
+     --}}
                    
 
 
 
                 
 
-                            <li >
-                                <a href="{{route('leave')}}" class="">
-                                    <i class="ti-calendar"></i> <span> Leave </span>
-                                </a>
-                            </li>
+                          
                      
                             <li >
-                                <a href="" class="">
-                                    <i class="ti-calendar"></i> <span> Leave Type</span>
+                                <a href="{{route('leave-types.index')}}" class="">
+                                    <i class="ti-calendar"></i> <span> Leave Types</span>
                                 </a>
                             </li>
                             
                             <li >
-                                <a href="" class="">
+                                <a href="{{ route('leave-applications.create') }}" class="">
                                     <i class="ti-calendar"></i> <span> Apply Leave</span>
                                 </a>
                             </li>
                             <li >
                                 <a href="" class="">
-                                    <i class="ti-calendar"></i> <span> Leave Logs</span>
+                                    <i class="ti-calendar"></i> <span> Leave Record</span>
                                 </a>
                             </li>
                         </ul>

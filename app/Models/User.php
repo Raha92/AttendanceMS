@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Models; 
+namespace App\Models;
+
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -9,54 +10,42 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+   // in the User model
+
+protected $fillable = [
+    'name', 'email', 'password', 'role', 'teacher_email', 'teacher_password',
+];
+
+
+    protected $hidden = [
+        'pin_code', 'password', 'remember_token',
+    ];
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
 
     public function getRouteKeyName()
     {
         return 'name';
     }
-    
+
     public function roles()
     {
-        return $this->belongsToMany('App\Models\Role', 'role_users', 'user_id', 'role_id');
+        return $this->belongsToMany(Role::class, 'role_users', 'user_id', 'role_id');
     }
 
     public function hasAnyRole($roles)
     {
-        if (Is_array($roles)) {
-            foreach ($roles as $role) {
-                if ($this->hasRole($role)) {
-                    return true;
-                }
-            }
+        if (is_array($roles)) {
+            return !empty(array_intersect($roles, $this->roles->pluck('slug')->toArray()));
         } else {
-            if ($this->hasRole($roles)) {
-                return true;
-            }
+            return $this->roles->pluck('slug')->contains($roles);
         }
-
-        return false;
     }
 
-    public static function hasRole($role)
+    public function hasRole($role)
     {
-        if (auth()->user()->roles()->first()->slug === $role) {
-            return true;
-        }
-        return false;
+        return $this->roles->pluck('slug')->contains($role);
     }
-
-
-    protected $fillable = [
-        'name', 'email', 'password', 'pin_code',
-    ];
-
-  
-    protected $hidden = [
-        'pin_code','password', 'remember_token',
-    ];
-
-  
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
 }

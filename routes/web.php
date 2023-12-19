@@ -3,21 +3,35 @@
 
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\FingerDevicesControlller;
+use App\Http\Controllers\LeaveApplicationController;
 
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 Route::get('attended/{user_id}', '\App\Http\Controllers\AttendanceController@attended' )->name('attended');
 Route::get('attended-before/{user_id}', '\App\Http\Controllers\AttendanceController@attendedBefore' )->name('attendedBefore');
-Auth::routes(['register' => false, 'reset' => false]);
+Route::get('/register', 'Auth\RegisterController@showRegistrationForm')->name('register');
+Route::post('/register', 'Auth\RegisterController@register');
+Auth::routes();
 
-Route::group(['middleware' => ['auth', 'Role'], 'roles' => ['admin']], function () {
+
     Route::resource('/employees', '\App\Http\Controllers\EmployeeController');
     Route::resource('/employees', '\App\Http\Controllers\EmployeeController');
+    Route::resource('/leave-types','\App\Http\Controllers\LeaveTypeController');
     Route::get('/attendance', '\App\Http\Controllers\AttendanceController@index')->name('attendance');
     Route::get('/showAttendance/{emp_id}','\App\Http\Controllers\AttendanceController@showAttendance')->name('showattendance');
-    Route::get('/showAttendance/{id}', [AttendanceController::class, 'updateStatus'])->name('attendance.updateStatus');
+    Route::get('/showAttendance/{id}', ['\App\Http\Controllers\AttendanceController@updateStatus'])->name('attendance.updateStatus');
+    // Laravel 7.x and below
+    Route::get('/leave-applications/create', LeaveApplicationController::class . '@create')->name('leave-applications.create');
+
+    // Route for handling the submission of leave application form
+    Route::post('/leave-applications/store', LeaveApplicationController::class . '@store')->name('leave-applications.store');
+    
+    // Route for displaying leave applications for a specific employee
+    Route::get('/leave-applications/{emp_id}', LeaveApplicationController::class . '@indexForEmployee')->name('leave-applications.index');
+
 
     
      Route::get('/employeeList', '\App\Http\Controllers\AttendanceController@showEmployeeList')->name('employee-list');
@@ -42,7 +56,7 @@ Route::group(['middleware' => ['auth', 'Role'], 'roles' => ['admin']], function 
    
     
 
-});
+
 
 Route::group(['middleware' => ['auth']], function () {
 
@@ -69,3 +83,10 @@ Route::group(['middleware' => ['auth']], function () {
 
 
 // Route::get('{any}', 'App\http\controllers\VeltrixController@index');
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
